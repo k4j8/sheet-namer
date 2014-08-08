@@ -1,6 +1,6 @@
 Attribute VB_Name = "SheetNamer"
 ' created by Kyle Johnston
-' last update: 2014-08-01
+' last update: 2014-08-04
 
 Public exists As Boolean
 
@@ -220,7 +220,7 @@ Selection.OnAction = "SelectCellA1"
 Selection.Characters.text = "Select Cell A1 on All Sheets"
 
 ActiveSheet.Buttons.Add(ButtonSize.Left + 258 + 120 + 5, ButtonSize.Top, 20, 20).Select
-Selection.OnAction = "SelectCellA1Insttructions"
+Selection.OnAction = "SelectCellA1Instructions"
 Selection.Characters.text = "?"
 
 
@@ -520,7 +520,16 @@ Dim ws As Worksheet
 
 For Each ws In ActiveWorkbook.Sheets
     ws.Activate
-    ws.[f11].Select
+    ws.[k11].Select
+    ws.[j10].Select
+    ws.[i9].Select
+    ws.[h8].Select
+    ws.[g7].Select
+    ws.[f6].Select
+    ws.[e5].Select
+    ws.[d4].Select
+    ws.[c3].Select
+    ws.[b2].Select
     ws.[a1].Select
 Next ws
 ActiveWorkbook.Worksheets(1).Activate
@@ -541,6 +550,8 @@ End Sub
 
 Sub UpdateStatus(status)
 ' provides user feedback for actions
+
+Worksheets("Sheet_Namer").[C21].ClearContents
 
 Worksheets("Sheet_Namer").[C19].value = status
 With Worksheets("Sheet_Namer").[C19:D19].Interior
@@ -569,9 +580,9 @@ Sub ResetInstructions()
 Call Instructions("Resets the Sheet_Namer sheet, filling the pink box with current sheet names. This is the same as running the macro on a single cell on a worksheet other than Sheet_Namer.")
 
 End Sub
-Sub SelectCellA1Insttructions()
+Sub SelectCellA1Instructions()
 
-Call Instructions("Sets the visible window of each sheet to the upper-left corner. Fails if more than 10 rows or 5 columns are frozen.")
+Call Instructions("Sets the visible window of each sheet to the upper-left corner. Fails if more than 10 rows or 10 columns are frozen.")
 
 End Sub
 
