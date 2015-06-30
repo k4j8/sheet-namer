@@ -1,6 +1,6 @@
 Attribute VB_Name = "SheetNamer"
 ' created by Kyle Johnston on 2014-07-15
-' last update: 2015-06-24
+' last update: 2015-06-29
 
 Public exists As Boolean
 
@@ -11,13 +11,6 @@ Sub Main()
 ' if Sheet_Namer is selected: updates sheet names
 ' if 1 cell (not Sheet_Namer) is selected: creates Sheet_Namer
 ' if multiple cells (not Sheet_Namer) are selected: assigns cell values to sheet names
-
-
-'' ADD UNDERSCORE TO SHEET NAMES
-
-For Each ws In Worksheets
-    ws.Name = Replace(ws.Name, " ", "_")
-Next
 
 
 '' BACKUP
@@ -109,10 +102,10 @@ ActiveSheet.Range("C2:D2").Font.Bold = True
 ActiveSheet.Range("C1").value = "Instructions"
 ActiveSheet.Range("C2").value = "cells selected"
 ActiveSheet.Range("D2").value = "what the macro does"
-ActiveSheet.Range("C3").value = "if Sheet_Namer is selected..."
+ActiveSheet.Range("C3").value = "if Sheet_Namer is active..."
 ActiveSheet.Range("D3").value = "updates sheet names"
 ActiveSheet.Range("C4").value = "if 1 cell (not in Sheet_Namer) is selected..."
-ActiveSheet.Range("D4").value = "creates/reloads Sheet_Namer"
+ActiveSheet.Range("D4").value = "creates/resets Sheet_Namer"
 ActiveSheet.Range("C5").value = "if multiple cells (not in Sheet_Namer) are selected..."
 ActiveSheet.Range("D5").value = "assigns cell values to sheet names"
 For Each ws In Worksheets
@@ -167,14 +160,13 @@ Columns("A").AutoFit
 Columns("C").AutoFit
 Columns("D").AutoFit
 
-ActiveSheet.Range("C7").value = "In sheet names, spaces will be replaced with underscores. This is necessary for hyperlinks to work."
-ActiveSheet.Range("C8").value = "You may delete this sheet at any time."
+ActiveSheet.Range("C7").value = "You may delete this sheet at any time."
 
 ' create hyperlinks
 For Each xCell In Worksheets("Sheet_Namer").Range("A1:A" & wsCount) ' range of filled cells
     If xCell.value <> "Sheet_Namer" Then
         ActiveSheet.Hyperlinks.Add Anchor:=Range("B" & xCell.Row), Address:="", SubAddress:= _
-            xCell.value & "!A1", TextToDisplay:="Activate"
+            "'" & xCell.value & "'!A1", TextToDisplay:="Activate"
     End If
 Next
 
@@ -259,13 +251,6 @@ Sub UpdateSheetNamer()
 
 Application.ScreenUpdating = False
 
-' if using Sheet_Namer, and therefore hyperlinks, make names hyperlink-friendly
-If ActiveSheet.Name = "Sheet_Namer" Then
-    For Each xCell In Selection
-        xCell.value = Replace(xCell.value, " ", "_")
-    Next
-End If
-
 ' report an error if two names are the same in the list
 Dim same As Boolean ' variable same prevents error when comparing cell to itself
 For Each c1 In Selection
@@ -329,7 +314,7 @@ If ActiveSheet.Name = "Sheet_Namer" Then
     For Each xCell In Worksheets("Sheet_Namer").Range("A1:A" & wsAllCount) ' range of filled cells
         If xCell.value <> "Sheet_Namer" Then
             ActiveSheet.Hyperlinks.Add Anchor:=Range("B" & xCell.Row), Address:="", SubAddress:= _
-                xCell.value & "!A1", TextToDisplay:="Activate"
+                "'" & xCell.value & "'!A1", TextToDisplay:="Activate"
         End If
     Next
     
@@ -343,7 +328,7 @@ If ActiveSheet.Name = "Sheet_Namer" Then
         .PatternTintAndShade = 0
     End With
     
-    Call UpdateStatus("sheet names updated from list")
+    Call UpdateStatus("Sheet names updated from list.")
     
     Columns("A").AutoFit
     ActiveSheet.Range("A1").Select
@@ -469,7 +454,7 @@ ActiveSheet.Range(RestoreColumn & "2:" & RestoreColumn & FilledCells + 1).Select
 
 Call SheetNamer.Main
 Call CreateSheetNamer
-Call UpdateStatus("sheet names from column " & RestoreColumn & " restored")
+Call UpdateStatus("Sheet names from column " & RestoreColumn & " restored.")
 
 End Sub
 
@@ -491,13 +476,13 @@ If exists Then
             Worksheets("Sheet_Namer_Backup").Visible = True
             Worksheets("Sheet_Namer_Backup").Activate
             Worksheets("Sheet_Namer_Backup").Range("A2").Select
-            Call UpdateStatus("backup shown")
+            Call UpdateStatus("Backup shown.")
     Else
         Worksheets("Sheet_Namer_Backup").Visible = xlVeryHidden
-        Call UpdateStatus("backup hidden")
+        Call UpdateStatus("Backup hidden.")
     End If
 Else
-    Call UpdateStatus("No backup is available. Click Update Sheet Names to create a new backup.")
+    Call UpdateStatus("Backup does not exist. Click Update Sheet Names to create a new backup.")
 End If
 
 End Sub
@@ -513,9 +498,9 @@ If exists Then
     Worksheets("Sheet_Namer_Backup").Visible = True
     Worksheets("Sheet_Namer_Backup").Delete
     Application.DisplayAlerts = True
-    Call UpdateStatus("deleted backup sheet names")
+    Call UpdateStatus("Deleted backup sheet names.")
 Else
-    Call UpdateStatus("Backup does not exist.")
+    Call UpdateStatus("Backup does not exist. Click Update Sheet Names to create a new backup.")
 End If
 
 Application.ScreenUpdating = True
@@ -523,33 +508,28 @@ Application.ScreenUpdating = True
 End Sub
 
 Sub SelectCellA1()
-' created by user Ojaybee from http://www.ozgrid.com
-' found by Kyle Johnston at http://www.ozgrid.com/forum/showthread.php?t=155143
-' last update: 2014-07-21 by Kyle Johnston
+' Scrolls to top right corner of every sheet and selects cell A1.
 
-'Application.ScreenUpdating = False ' enable to improve speed but only select A1 and not scroll
+Application.ScreenUpdating = False
+Application.EnableEvents = False
 
-Dim ws As Worksheet
+Dim sht As Worksheet, csheet As Worksheet
+Application.ScreenUpdating = False
+Set csheet = ActiveSheet
+For Each sht In ActiveWorkbook.Worksheets
+  If sht.Visible Then
+    sht.Activate
+    Range("A1").Select
+    ActiveWindow.ScrollRow = 1
+    ActiveWindow.ScrollColumn = 1
+  End If
+Next sht
+csheet.Activate
 
-For Each ws In ActiveWorkbook.Sheets
-    ws.Activate
-    ws.[k11].Select
-    ws.[j10].Select
-    ws.[i9].Select
-    ws.[h8].Select
-    ws.[g7].Select
-    ws.[f6].Select
-    ws.[e5].Select
-    ws.[d4].Select
-    ws.[c3].Select
-    ws.[b2].Select
-    ws.[a1].Select
-Next ws
-ActiveWorkbook.Worksheets(1).Activate
+Application.EnableEvents = True
+Application.ScreenUpdating = True
 
-'Application.ScreenUpdating = True
-
-Call UpdateStatus("A1 cells selected on all sheets")
+Call UpdateStatus("A1 cells selected on all sheets.")
 
 End Sub
 
@@ -557,7 +537,7 @@ Sub ResetRightClickMenuItems()
 ' resets the right-click menu that appears when right-clicking on a cell
 
 Application.CommandBars("Cell").Reset
-Call UpdateStatus("right-click menu has been reset")
+Call UpdateStatus("Right-click menu has been reset.")
 
 End Sub
 
@@ -584,18 +564,18 @@ End Sub
 
 Sub UpdateInstructions()
 
-Call Instructions("Click to have all of the names in the box on this sheet be set as the names of the sheets in this worksheet in order (top to bottom applied left to right).")
+Call Instructions("Sets all of the names in the box on this sheet as the names of the sheets in this workbook in order from top to bottom. Same as running this macro while Sheet_Namer is active.")
 
 End Sub
 
 Sub ResetInstructions()
 
-Call Instructions("Resets the Sheet_Namer sheet, filling the box with current sheet names. This is the same as running the macro on a single cell on a worksheet other than Sheet_Namer.")
+Call Instructions("Resets the Sheet_Namer sheet, filling the box with current sheet names. Same as running this macro on a single cell on a worksheet other than Sheet_Namer.")
 
 End Sub
 Sub SelectCellA1Instructions()
 
-Call Instructions("Sets the visible window of each sheet to the upper-left corner. Fails if more than 10 rows or 10 columns are frozen.")
+Call Instructions("Sets the visible window of each sheet to the upper-left corner.")
 
 End Sub
 
