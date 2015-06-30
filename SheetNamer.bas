@@ -1,10 +1,10 @@
 Attribute VB_Name = "SheetNamer"
-' created by Kyle Johnston
-' last update: 2014-08-04
+' created by Kyle Johnston on 2014-07-15
+' last update: 2015-06-24
 
 Public exists As Boolean
 
-Sub RunSheetNamer()
+Sub Main()
 ' This is the only program in the module the user should have direct access to.
 ' All other subs are activated by a sub or a button. (This is the main.)
 
@@ -109,11 +109,11 @@ ActiveSheet.Range("C2:D2").Font.Bold = True
 ActiveSheet.Range("C1").value = "Instructions"
 ActiveSheet.Range("C2").value = "cells selected"
 ActiveSheet.Range("D2").value = "what the macro does"
-ActiveSheet.Range("C3").value = "if Sheet_Namer is selected"
+ActiveSheet.Range("C3").value = "if Sheet_Namer is selected..."
 ActiveSheet.Range("D3").value = "updates sheet names"
-ActiveSheet.Range("C4").value = "if 1 cell (not in Sheet_Namer) is selected"
+ActiveSheet.Range("C4").value = "if 1 cell (not in Sheet_Namer) is selected..."
 ActiveSheet.Range("D4").value = "creates/reloads Sheet_Namer"
-ActiveSheet.Range("C5").value = "if multiple cells (not in Sheet_Namer) are selected"
+ActiveSheet.Range("C5").value = "if multiple cells (not in Sheet_Namer) are selected..."
 ActiveSheet.Range("D5").value = "assigns cell values to sheet names"
 For Each ws In Worksheets
     ' populate Sheet_Namer with existing names
@@ -150,6 +150,19 @@ With ActiveWorkbook.Sheets("Sheet_Namer").Tab
     .ThemeColor = xlThemeColorAccent6
     .TintAndShade = 0.399975585192419
 End With
+With Range("C21:C24")
+    ' merge cells for instructions
+    .Merge
+    .HorizontalAlignment = xlGeneral
+    .VerticalAlignment = xlTop
+    .WrapText = True
+    .Orientation = 0
+    .AddIndent = False
+    .IndentLevel = 0
+    .ShrinkToFit = False
+    .ReadingOrder = xlContext
+    .MergeCells = True
+End With
 Columns("A").AutoFit
 Columns("C").AutoFit
 Columns("D").AutoFit
@@ -161,7 +174,7 @@ ActiveSheet.Range("C8").value = "You may delete this sheet at any time."
 For Each xCell In Worksheets("Sheet_Namer").Range("A1:A" & wsCount) ' range of filled cells
     If xCell.value <> "Sheet_Namer" Then
         ActiveSheet.Hyperlinks.Add Anchor:=Range("B" & xCell.Row), Address:="", SubAddress:= _
-            xCell.value & "!A1", TextToDisplay:="Open"
+            xCell.value & "!A1", TextToDisplay:="Activate"
     End If
 Next
 
@@ -176,7 +189,7 @@ Set ButtonSize = ActiveSheet.Range("C9:C11")
 ' create button to run SheetNamer
 
 ActiveSheet.Buttons.Add(ButtonSize.Left, ButtonSize.Top, 90, 30).Select
-Selection.OnAction = "RunSheetNamer"
+Selection.OnAction = "SheetNamer.Main"
 Selection.Characters.text = "Update Sheet Names"
 
 ActiveSheet.Buttons.Add(ButtonSize.Left + 90 + 5, ButtonSize.Top, 20, 20).Select
@@ -316,7 +329,7 @@ If ActiveSheet.Name = "Sheet_Namer" Then
     For Each xCell In Worksheets("Sheet_Namer").Range("A1:A" & wsAllCount) ' range of filled cells
         If xCell.value <> "Sheet_Namer" Then
             ActiveSheet.Hyperlinks.Add Anchor:=Range("B" & xCell.Row), Address:="", SubAddress:= _
-                xCell.value & "!A1", TextToDisplay:="Open"
+                xCell.value & "!A1", TextToDisplay:="Activate"
         End If
     Next
     
@@ -454,7 +467,7 @@ While CheckCell <> ""
 Wend
 ActiveSheet.Range(RestoreColumn & "2:" & RestoreColumn & FilledCells + 1).Select ' select the range of filled cells
 
-Call RunSheetNamer
+Call SheetNamer.Main
 Call CreateSheetNamer
 Call UpdateStatus("sheet names from column " & RestoreColumn & " restored")
 
@@ -551,7 +564,7 @@ End Sub
 Sub UpdateStatus(status)
 ' provides user feedback for actions
 
-Worksheets("Sheet_Namer").[C21].ClearContents
+Worksheets("Sheet_Namer").[C21:C24].ClearContents
 
 Worksheets("Sheet_Namer").[C19].value = status
 With Worksheets("Sheet_Namer").[C19:D19].Interior
@@ -564,20 +577,20 @@ End Sub
 Sub Instructions(text)
 ' provides instructions for buttons
 
-Worksheets("Sheet_Namer").[C21].value = text
-Worksheets("Sheet_Namer").[C21].WrapText = True
+Worksheets("Sheet_Namer").[C21:C24].value = text
+Worksheets("Sheet_Namer").[C21:C24].WrapText = True
 
 End Sub
 
 Sub UpdateInstructions()
 
-Call Instructions("Click to have all of the names in the pink box on this sheet be set as the names of the sheets in this worksheet in order (top to bottom applied left to right).")
+Call Instructions("Click to have all of the names in the box on this sheet be set as the names of the sheets in this worksheet in order (top to bottom applied left to right).")
 
 End Sub
 
 Sub ResetInstructions()
 
-Call Instructions("Resets the Sheet_Namer sheet, filling the pink box with current sheet names. This is the same as running the macro on a single cell on a worksheet other than Sheet_Namer.")
+Call Instructions("Resets the Sheet_Namer sheet, filling the box with current sheet names. This is the same as running the macro on a single cell on a worksheet other than Sheet_Namer.")
 
 End Sub
 Sub SelectCellA1Instructions()
