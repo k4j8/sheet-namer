@@ -251,6 +251,14 @@ Sub UpdateSheetNamer()
 
 Application.ScreenUpdating = False
 
+' report an error if an apostrophe is used
+For Each c1 In Selection
+    If InStr(c1.value, "'") <> 0 Then
+        MsgBox ("Apostrophes are not allowed in names.")
+        End
+    End If
+Next
+
 ' report an error if two names are the same in the list
 Dim same As Boolean ' variable same prevents error when comparing cell to itself
 For Each c1 In Selection
