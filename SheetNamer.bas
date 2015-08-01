@@ -284,7 +284,7 @@ For Each c1 In Selection
         ' compare with sheet names
         If StrComp(c1, ws.Name) = 0 Then
             ' if names are the same, change sheet name
-            ws.Name = ws.Name & " duplicate " & DuplicateNum
+            ws.Name = ws.Name & " d " & DuplicateNum
             DuplicateNum = DuplicateNum + 1
         End If
     Next
