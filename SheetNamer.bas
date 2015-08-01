@@ -1,6 +1,6 @@
 Attribute VB_Name = "SheetNamer"
 ' created by Kyle Johnston on 2014-07-15
-' last update: 2015-06-29
+' last update: 2015-07-31
 
 Public exists As Boolean
 
@@ -143,19 +143,6 @@ With ActiveWorkbook.Sheets("Sheet_Namer").Tab
     .ThemeColor = xlThemeColorAccent6
     .TintAndShade = 0.399975585192419
 End With
-With Range("C21:C24")
-    ' merge cells for instructions
-    .Merge
-    .HorizontalAlignment = xlGeneral
-    .VerticalAlignment = xlTop
-    .WrapText = True
-    .Orientation = 0
-    .AddIndent = False
-    .IndentLevel = 0
-    .ShrinkToFit = False
-    .ReadingOrder = xlContext
-    .MergeCells = True
-End With
 Columns("A").AutoFit
 Columns("C").AutoFit
 Columns("D").AutoFit
@@ -284,7 +271,7 @@ For Each c1 In Selection
         ' compare with sheet names
         If StrComp(c1, ws.Name) = 0 Then
             ' if names are the same, change sheet name
-            ws.Name = ws.Name & " duplicate " & DuplicateNum
+            ws.Name = ws.Name & "d" & DuplicateNum
             DuplicateNum = DuplicateNum + 1
         End If
     Next
@@ -336,10 +323,9 @@ If ActiveSheet.Name = "Sheet_Namer" Then
         .PatternTintAndShade = 0
     End With
     
-    Call UpdateStatus("Sheet names updated from list.")
-    
     Columns("A").AutoFit
     ActiveSheet.Range("A1").Select
+    Call UpdateStatus("Sheet names updated from list.")
     Application.ScreenUpdating = True
     
 End If
@@ -552,21 +538,14 @@ End Sub
 Sub UpdateStatus(status)
 ' provides user feedback for actions
 
-Worksheets("Sheet_Namer").[C21:C24].ClearContents
-
-Worksheets("Sheet_Namer").[C19].value = status
-With Worksheets("Sheet_Namer").[C19:D19].Interior
-    .ThemeColor = xlThemeColorAccent6
-    .TintAndShade = 0.399975585192419
-End With
+Application.StatusBar = status
 
 End Sub
 
 Sub Instructions(text)
 ' provides instructions for buttons
 
-Worksheets("Sheet_Namer").[C21:C24].value = text
-Worksheets("Sheet_Namer").[C21:C24].WrapText = True
+MsgBox (text)
 
 End Sub
 
