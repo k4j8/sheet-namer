@@ -1,6 +1,8 @@
 Attribute VB_Name = "SheetNamer"
-' created by Kyle Johnston on 2014-07-15
-' last update: 2015-06-29
+
+' Attribute VB_Name = "SheetNamer"
+' Created by Kyle Johnston on 2014-07-15
+' Last update: 2015-06-29
 
 Public exists As Boolean
 
@@ -43,9 +45,9 @@ FilledCells = 0
 ' update FilledCells
 If ActiveSheet.Name = "Sheet_Namer" Then
     ' if using Sheet_Namer, select range of filled cells
-    ActiveSheet.Range("A1").value = "Sheet_Namer" ' cell A1 must be filled for next line to run
+    ActiveSheet.Range("A1").Value = "Sheet_Namer" ' cell A1 must be filled for next line to run
     Dim CheckCell As String ' cell to be checked if empty
-    CheckCell = ActiveSheet.Range("A1").value
+    CheckCell = ActiveSheet.Range("A1").Value
     While CheckCell <> ""
         FilledCells = FilledCells + 1 ' increase number of non-empty cells
         CheckCell = ActiveSheet.Range("A" & FilledCells + 1) ' try next cell
@@ -69,13 +71,13 @@ Dim wsCount As Integer ' populates Sheet_Namer or renames sheets from selection
 wsCount = 0
 
 If FilledCells = 1 And ActiveSheet.Name <> "Sheet_Namer" Then
-    
+
     Call CreateSheetNamer
-    
+
 Else
-    
+
     Call UpdateSheetNamer
-    
+
 End If
 
 End Sub
@@ -99,15 +101,15 @@ ActiveSheet.Name = "Sheet_Namer"
 ActiveSheet.Range("A1:A1").Font.Bold = True
 ActiveSheet.Range("C1:C1").Font.Bold = True
 ActiveSheet.Range("C2:D2").Font.Bold = True
-ActiveSheet.Range("C1").value = "Instructions"
-ActiveSheet.Range("C2").value = "cells selected"
-ActiveSheet.Range("D2").value = "what the macro does"
-ActiveSheet.Range("C3").value = "if Sheet_Namer is active..."
-ActiveSheet.Range("D3").value = "updates sheet names"
-ActiveSheet.Range("C4").value = "if 1 cell (not in Sheet_Namer) is selected..."
-ActiveSheet.Range("D4").value = "creates/resets Sheet_Namer"
-ActiveSheet.Range("C5").value = "if multiple cells (not in Sheet_Namer) are selected..."
-ActiveSheet.Range("D5").value = "assigns cell values to sheet names"
+ActiveSheet.Range("C1").Value = "Instructions"
+ActiveSheet.Range("C2").Value = "cells selected"
+ActiveSheet.Range("D2").Value = "what the macro does"
+ActiveSheet.Range("C3").Value = "if Sheet_Namer is active..."
+ActiveSheet.Range("D3").Value = "updates sheet names"
+ActiveSheet.Range("C4").Value = "if 1 cell (not in Sheet_Namer) is selected..."
+ActiveSheet.Range("D4").Value = "creates/resets Sheet_Namer"
+ActiveSheet.Range("C5").Value = "if multiple cells (not in Sheet_Namer) are selected..."
+ActiveSheet.Range("D5").Value = "assigns cell values to sheet names"
 For Each ws In Worksheets
     ' populate Sheet_Namer with existing names
     If ws.Name <> "Sheet_Namer_Backup" Then
@@ -126,7 +128,7 @@ With ActiveSheet.Range("A1:A" & wsCount).Interior
 End With
 With ActiveSheet.[D14]
     ' create Extra Features title
-    .value = "Extra Features"
+    .Value = "Extra Features"
     .HorizontalAlignment = xlCenter
     .Font.Bold = True
 End With
@@ -160,13 +162,13 @@ Columns("A").AutoFit
 Columns("C").AutoFit
 Columns("D").AutoFit
 
-ActiveSheet.Range("C7").value = "You may delete this sheet at any time."
+ActiveSheet.Range("C7").Value = "You may delete this sheet at any time."
 
 ' create hyperlinks
 For Each xCell In Worksheets("Sheet_Namer").Range("A1:A" & wsCount) ' range of filled cells
-    If xCell.value <> "Sheet_Namer" Then
+    If xCell.Value <> "Sheet_Namer" Then
         ActiveSheet.Hyperlinks.Add Anchor:=Range("B" & xCell.Row), Address:="", SubAddress:= _
-            "'" & xCell.value & "'!A1", TextToDisplay:="Activate"
+            "'" & xCell.Value & "'!A1", TextToDisplay:="Activate"
     End If
 Next
 
@@ -253,7 +255,7 @@ Application.ScreenUpdating = False
 
 ' report an error if an apostrophe is used
 For Each c1 In Selection
-    If InStr(c1.value, "'") <> 0 Then
+    If InStr(c1.Value, "'") <> 0 Then
         MsgBox ("Apostrophes are not allowed in names.")
         End
     End If
@@ -317,15 +319,15 @@ Next
 '' UPDATE Sheet_Namer (IF USING)
 
 If ActiveSheet.Name = "Sheet_Namer" Then
-    
+
     ' add hyperlinks
     For Each xCell In Worksheets("Sheet_Namer").Range("A1:A" & wsAllCount) ' range of filled cells
-        If xCell.value <> "Sheet_Namer" Then
+        If xCell.Value <> "Sheet_Namer" Then
             ActiveSheet.Hyperlinks.Add Anchor:=Range("B" & xCell.Row), Address:="", SubAddress:= _
-                "'" & xCell.value & "'!A1", TextToDisplay:="Activate"
+                "'" & xCell.Value & "'!A1", TextToDisplay:="Activate"
         End If
     Next
-    
+
     ' change background color of cells
     ActiveSheet.Range("A1:A" & wsAllCount).NumberFormat = "@"
     With ActiveSheet.Range("A1:A" & wsAllCount).Interior
@@ -335,13 +337,13 @@ If ActiveSheet.Name = "Sheet_Namer" Then
         .TintAndShade = 0.799981688894314
         .PatternTintAndShade = 0
     End With
-    
+
     Call UpdateStatus("Sheet names updated from list.")
-    
+
     Columns("A").AutoFit
     ActiveSheet.Range("A1").Select
     Application.ScreenUpdating = True
-    
+
 End If
 
 End Sub
@@ -375,7 +377,7 @@ If Not exists Then
         .ThemeColor = xlThemeColorAccent6
         .TintAndShade = 0.399975585192419
     End With
-    
+
     ' create button to restore names
     Dim ButtonSize As Range
     Dim ColumnNum As Integer
@@ -404,7 +406,7 @@ SaveCell = 1 ' start saving at A2
 For Each ws In Worksheets
     If ws.Name <> "Sheet_Namer_Backup" Then
         SaveCell = SaveCell + 1
-        Worksheets("Sheet_Namer_Backup").Range("A" & SaveCell).value = ws.Name
+        Worksheets("Sheet_Namer_Backup").Range("A" & SaveCell).Value = ws.Name
     End If
 Next
 
@@ -452,7 +454,7 @@ Dim FilledCells As Integer
 FilledCells = 0
 
 Dim CheckCell As String
-CheckCell = ActiveSheet.Range(RestoreColumn & "2").value ' cell to be checked if empty
+CheckCell = ActiveSheet.Range(RestoreColumn & "2").Value ' cell to be checked if empty
 
 While CheckCell <> ""
     FilledCells = FilledCells + 1 ' increase number of non-empty cells
@@ -554,7 +556,7 @@ Sub UpdateStatus(status)
 
 Worksheets("Sheet_Namer").[C21:C24].ClearContents
 
-Worksheets("Sheet_Namer").[C19].value = status
+Worksheets("Sheet_Namer").[C19].Value = status
 With Worksheets("Sheet_Namer").[C19:D19].Interior
     .ThemeColor = xlThemeColorAccent6
     .TintAndShade = 0.399975585192419
@@ -565,7 +567,7 @@ End Sub
 Sub Instructions(text)
 ' provides instructions for buttons
 
-Worksheets("Sheet_Namer").[C21:C24].value = text
+Worksheets("Sheet_Namer").[C21:C24].Value = text
 Worksheets("Sheet_Namer").[C21:C24].WrapText = True
 
 End Sub
